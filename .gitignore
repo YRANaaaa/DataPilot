@@ -1,0 +1,18 @@
+# Python缓存
+__pycache__/
+*.py[cod]
+
+# PyCharm
+.idea/
+
+# 虚拟环境
+.venv/
+venv/
+
+# 上传文件和生成图表
+uploads/
+charts/
+
+# 环境变量和日志
+.env
+*.log
