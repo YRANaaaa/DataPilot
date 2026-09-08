@@ -1,12 +1,16 @@
 from datapilot.core.config import CHART_DIR, UPLOAD_DIR
 from datapilot.schemas.common import ApiResponse
+from datapilot.schemas.analysis import (
+    FilterRowsRequest,
+    GroupAggregateRequest,
+    GroupCountRequest,
+    SortRowsRequest,
+)
+from datapilot.schemas.chart import CreateChartRequest
 
 from pathlib import Path
-from pydantic import BaseModel, Field
-
 import uuid
 from io import BytesIO
-from typing import Literal
 import logging
 from fastapi import FastAPI, UploadFile, File,HTTPException,Query
 import pandas as pd
@@ -36,45 +40,6 @@ app.mount(
     name="charts" # 内部路由
 )
 
-## Pydantic模型
-# 定义请求模型
-class GroupCountRequest(BaseModel):
-    group_by: str
-    sort_order: Literal["asc", "desc"] = "desc" # Literal限制排序顺序只能是asc或desc,asc表示升序,desc表示降序
-    limit: int = Field(default=10,ge=1,le=100) # 默认10行,限制返回数量在1-100之间
-    include_missing: bool = False
-
-class GroupAggregateRequest(BaseModel):
-    group_by: str
-    target: str
-    aggregation: Literal["mean","sum","min","max","median"] = "mean"
-    sort_order: Literal["asc", "desc"] = "desc"
-    limit: int = Field(default=10,ge=1,le=100)
-    include_missing_group: bool = False
-
-class FilterRowsRequest(BaseModel):
-    column: str
-    operator: Literal["eq","ne","gt","gte","lt","lte","contains"]
-    value: str | int | float | bool
-    case_sensitive: bool = False
-    limit: int = Field(default=20,ge=1,le=100)
-
-class SortRowsRequest(BaseModel):
-    column: str
-    sort_order: Literal["asc","desc"] = "desc"
-    sort_as: Literal["auto","number","text"] = "auto"
-    missing_position: Literal["first","last"] = "last" # 缺失值位置,first表示缺失值在最前面,last表示缺失值在最后面
-    limit: int = Field(default=20,ge=1,le=100)
-
-class CreateChartRequest(BaseModel):
-    x_column: str
-    y_column: str | None = None
-
-    aggregation: Literal["count", "mean", "sum", "min", "max", "median"] = "count"
-    chart_type: Literal["bar", "line"] = "bar"
-    sort_order: Literal["asc", "desc"] = "desc"
-    limit: int = Field(default=10, ge=1, le=30)
-    title: str | None = Field(default=None, max_length=100)
 
 ## 文件辅助函数
 # 封装数据集路径查找逻辑
