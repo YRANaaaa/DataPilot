@@ -25,7 +25,7 @@ router = APIRouter(
 )
 
 # 分组计数接口
-@router.post("group-count",response_model=ApiResponse)
+@router.post("/group-count",response_model=ApiResponse)
 def group_count(dataset_id: str,request: GroupCountRequest):
     # 1. 查找数据集
     file_path = get_dataset_path(dataset_id)
@@ -44,7 +44,7 @@ def group_count(dataset_id: str,request: GroupCountRequest):
     )
 
 # 分组聚合接口
-@router.post("group-aggregate",response_model=ApiResponse)
+@router.post("/group-aggregate",response_model=ApiResponse)
 def group_aggregate(dataset_id: str,request: GroupAggregateRequest):
     # 1. 获取数据集路径
     file_path = get_dataset_path(dataset_id)
@@ -68,7 +68,7 @@ def group_aggregate(dataset_id: str,request: GroupAggregateRequest):
     )
 
 # 条件筛选接口
-@router.post("filter",response_model=ApiResponse)
+@router.post("/filter",response_model=ApiResponse)
 def filter_rows(dataset_id: str,request: FilterRowsRequest):
     # 1. 查找数据集
     file_path = get_dataset_path(dataset_id)
@@ -89,7 +89,7 @@ def filter_rows(dataset_id: str,request: FilterRowsRequest):
     )
 
 # 数据排序接口
-@router.post("sort",response_model=ApiResponse)
+@router.post("/sort",response_model=ApiResponse)
 def sort_rows(dataset_id: str,request: SortRowsRequest):
     # 1. 获取数据集文件
     file_path = get_dataset_path(dataset_id)

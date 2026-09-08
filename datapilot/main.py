@@ -34,9 +34,6 @@ app.mount(
 )
 
 
-
-
-
 @app.post("/datasets/{dataset_id}/analysis/chart",response_model=ApiResponse)
 def create_chart(dataset_id: str,request: CreateChartRequest):
     # 1. 查找数据集
