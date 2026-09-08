@@ -18,6 +18,7 @@ from datapilot.services.analysis_service import (
     sort_rows_tool,
 )
 from datapilot.services.chart_service import create_chart_tool
+from datapilot.api.health import router as health_router
 
 
 from pathlib import Path
@@ -37,6 +38,7 @@ app = FastAPI(
     description="基于AI Agent的可验证数据分析平台",
     version="0.1.0"
 )
+app.include_router(health_router)
 
 # 配置静态文件目录
 app.mount(
@@ -47,15 +49,6 @@ app.mount(
 
 
 ## API接口
-# 健康检查接口
-@app.get("/health")
-def health_check():
-    return {
-        "status": "ok",
-        "service": "DataPilot",
-        "version": "0.1.0"
-    }
-
 # 上传文件接口
 @app.post("/datasets/upload", response_model=ApiResponse)
 async def upload_dataset(file: UploadFile = File(...)):
