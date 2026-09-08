@@ -7,6 +7,11 @@ from datapilot.schemas.analysis import (
     SortRowsRequest,
 )
 from datapilot.schemas.chart import CreateChartRequest
+from datapilot.services.dataset_service import (
+    get_dataset_path,
+    read_csv_file,
+)
+
 
 from pathlib import Path
 import uuid
@@ -42,30 +47,6 @@ app.mount(
 
 
 ## 文件辅助函数
-# 封装数据集路径查找逻辑
-def get_dataset_path(dataset_id: str) -> Path:
-    # 1. 检查dataset_id是否是合法的uuid
-    try:
-        valid_dataset_id = str(uuid.UUID(dataset_id))
-    except ValueError:
-        raise HTTPException(status_code=400, detail="dataset_id格式错误")
-
-    # 2. 拼接文件路径,检查文件是否存在
-    file_path = UPLOAD_DIR / f"{valid_dataset_id}.csv"
-    if not file_path.exists():
-        raise HTTPException(status_code=404, detail="数据集不存在")
-
-    return file_path
-
-# 封装读取csv文件逻辑
-def read_csv_file(file_path: Path) -> pd.DataFrame:
-    try:
-        return pd.read_csv(file_path)
-    except Exception as e:
-        logging.error(f"读取csv文件失败: {e}")
-        raise HTTPException(status_code=500, detail="CSV内容无法读取")
-
-
 ## Pandas分析工具
 def group_count_tool(df: pd.DataFrame,request: GroupCountRequest) -> dict:
     group_by = request.group_by
