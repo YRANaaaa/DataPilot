@@ -1,8 +1,12 @@
+from datapilot.core.config import CHART_DIR, UPLOAD_DIR
+from datapilot.schemas.common import ApiResponse
+
+from pathlib import Path
+from pydantic import BaseModel, Field
+
 import uuid
 from io import BytesIO
-from pathlib import Path
 from typing import Literal
-from pydantic import BaseModel, Field
 import logging
 from fastapi import FastAPI, UploadFile, File,HTTPException,Query
 import pandas as pd
@@ -15,13 +19,6 @@ from fastapi.staticfiles import StaticFiles
 
 plt.rcParams["font.sans-serif"] = ["Microsoft YaHei","SimHei"] # 设置中文字体
 plt.rcParams["axes.unicode_minus"] = False # 解决负号显示问题
-
-
-UPLOAD_DIR = Path("uploads")
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True) # 创建uploads目录
-
-CHART_DIR = Path("charts")
-CHART_DIR.mkdir(parents=True, exist_ok=True) # 创建charts目录
 
 
 
@@ -40,12 +37,6 @@ app.mount(
 )
 
 ## Pydantic模型
-# 定义响应模型
-class ApiResponse(BaseModel):
-    code: int
-    message: str
-    data: dict | None = None
-
 # 定义请求模型
 class GroupCountRequest(BaseModel):
     group_by: str
